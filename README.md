@@ -4,7 +4,7 @@ Code for [*Multi-Agent Trust Region Policy Optimization*](https://arxiv.org/abs/
 ## Requirements
 * Python 3.7.6
 * [OpenAI baselines-tf2](https://github.com/tanzhenyu/baselines-tf2.git)
-* My [fork](https://github.com/shariqiqbal2810/multiagent-particle-envs) of Multi-agent Particle Environments
+* My [fork](https://github.com/hepengli/multiagent-particle-envs.git) of Multi-agent Particle Environments
 * [TensorFlow 2](https://www.tensorflow.org/), version: 2.2.0
 * [OpenAI Gym](https://github.com/openai/gym), version: 0.11.0
 
