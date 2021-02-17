@@ -8,6 +8,13 @@ Code for [*Multi-Agent Trust Region Policy Optimization*](https://arxiv.org/abs/
 * [TensorFlow 2](https://www.tensorflow.org/), version: 2.2.0
 * [OpenAI Gym](https://github.com/openai/gym), version: 0.11.0
 
+## Installation
+git clone https://github.com/hepengli/matrpo.git
+
+cd matrpo
+
+pip install -e .
+
 ## How to Run
 
 All training code is contained within `./matrpo/examples`.
