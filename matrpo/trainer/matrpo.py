@@ -53,7 +53,7 @@ class ClipActionsWrapper(gym.Wrapper):
         return self.env.reset(**kwargs)
 
 class MATRPO(object):
-    """ Paralell CPO algorithm """
+    """ MATRPO algorithm """
     def __init__(self, env_id, scenario_id, nsteps, network, num_env, admm_iter, seed=None, 
                  finite=True, load_path=None, logger_dir=None, force_dummy=False, mode='matrpo', 
                  gamma=0.995, lam=0.95, max_kl=0.001, ent_coef=0.0, vf_stepsize=3e-4, vf_iters=3, 
