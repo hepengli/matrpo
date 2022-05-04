@@ -434,7 +434,6 @@ class AgentModel(tf.Module):
                 logger.log("couldn't compute a good step")
                 self.set_from_flat(thbefore)
 
-
     def vfupdate(self, obs, returns, values):
         with self.timed("vf"):
             for _ in range(self.vf_iters):

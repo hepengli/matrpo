@@ -27,7 +27,10 @@ def worker(remote, parent_remote, env_fn_wrapper):
                 remote.close()
                 break
             elif cmd == 'get_spaces_spec':
-                remote.send((env.observation_space, env.action_space, env.spec))
+                try:
+                    remote.send((env.observation_space, env.action_space, env.spec))
+                except:
+                    remote.send((env.observation_space, env.action_space, None))
             else:
                 raise NotImplementedError
     except KeyboardInterrupt:

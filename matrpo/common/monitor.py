@@ -72,14 +72,19 @@ class Monitor(Wrapper):
             epinfo = {"r": np.sum(eprew), "l": eplen, "t": round(time.time() - self.tstart, 6)}
             epinfo.update(dict(zip(self.info_keywords, [0.0]*len(self.info_keywords))))
             epinfo['s'] = round(np.sum(epsft), 6)
-            for k in self.info_keywords:
-                epinfo[k] = info[k]
-            if epinfo.get('r0') is not None:
-                for i, eprew_i in enumerate(eprew):
-                    epinfo['r{}'.format(i)] = eprew_i
             self.episode_rewards.append(eprew)
             self.episode_lengths.append(eplen)
             self.episode_times.append(time.time() - self.tstart)
+            for k in self.info_keywords:
+                if k in info:
+                    epinfo[k] = info[k]
+                elif k == 'battle_won':
+                    epinfo[k] = False
+                else:
+                    epinfo[k] = 0
+            if epinfo.get('r0') is not None:
+                for i, eprew_i in enumerate(eprew):
+                    epinfo['r{}'.format(i)] = eprew_i
             epinfo.update(self.current_reset_info)
             if self.results_writer:
                 self.results_writer.write_row(epinfo)

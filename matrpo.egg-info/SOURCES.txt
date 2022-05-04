@@ -2,9 +2,11 @@ README.md
 setup.py
 examples/__init__.py
 examples/collector_train.py
+examples/collector_train_env.py
 examples/interactive.py
 examples/learning_curves.py
 examples/play.py
+examples/sc2_train.py
 examples/spread_play.py
 examples/spread_train.py
 matrpo/__init__.py

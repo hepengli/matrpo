@@ -1,11 +1,11 @@
 import tensorflow as tf
 import numpy as np
 import time, copy
+from baselines.common.vec_env.vec_env import VecEnv
 
 class Model(object):
-    def __init__(self, env, world, policies, admm_iter, mode, ob_normalization):
+    def __init__(self, env, policies, admm_iter, mode, ob_normalization):
         self.env = env
-        self.world = world
         self.policies = policies
         self.admm_iter = admm_iter 
         self.mode = mode
@@ -41,6 +41,11 @@ class Model(object):
         values = np.stack(values, axis=1)
         neglogps = np.stack(neglogps, axis=1)
 
+        # # Homomorphic Encryption
+        # sum_values = np.zeros_like(values)
+        # for i in range(values.shape[1]):
+        #     sum_values[:,i] = values.sum(axis=1)
+
         return actions, values, neglogps
 
     def test_step(self, obs):
@@ -68,7 +73,7 @@ class Model(object):
 
     def share_actions(self, actions):
         shared_actions_n = []
-        for i in range(len(self.world.agents)):
+        for i in range(len(self.env.action_space)):
             if self.mode == 'matrpo':
                 shared_actions_n.append(actions)
             elif self.mode == 'trpo':
@@ -85,11 +90,11 @@ class Model(object):
 
     def train(self, actions, obs, rewards, returns, dones, values, advs, neglogpacs):
         eps = 1e-8
-        A = self.world.comm_matrix
+        A = self.policies[0].agent.comm_matrix
         edges = A[np.unique(np.nonzero(A)[0])]
         # Policy Update
         if self.mode == 'matrpo':
-            for i in range(len(self.world.policy_agents)):
+            for i in range(len(self.env.action_space)):
                 if self.ob_normalization:
                     self.policies[i].pi.ob_rms.update(obs[i])
                     self.policies[i].oldpi.ob_rms.update(obs[i])
@@ -123,7 +128,7 @@ class Model(object):
             self.policies[self.leader].trpo_update(*argvs)
         else:
             norm_advs = advs.copy()
-            for i in range(len(self.world.policy_agents)):
+            for i in range(len(self.env.action_space)):
                 if self.ob_normalization:
                     self.policies[i].pi.ob_rms.update(obs[i])
                     self.policies[i].oldpi.ob_rms.update(obs[i])
@@ -131,4 +136,3 @@ class Model(object):
                 self.policies[i].assign_old_eq_new()
                 self.policies[i].vfupdate(obs[i], returns[i], values[i])
                 self.policies[i].trpo_update(obs[i], actions[i], norm_advs[i], returns[i], values[i])
-

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 def plot(df_train, agents, episodes):
     columns = ['r{}'.format(i) for i in range(len(agents.policies))]
     rewards = df_train[columns].sum(axis=1).values
+    rewards = rewards[:episodes * (rewards.size // episodes)]
     rewards = np.mean(rewards.reshape(-1, episodes), axis=1)
     plt.close()
     fig = plt.figure()

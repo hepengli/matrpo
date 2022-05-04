@@ -26,18 +26,16 @@ class Runner(AbstractEnvRunner):
     run():
     - Make a mini batch
     """
-    def __init__(self, env, world, model, nsteps, gamma, lam, finite):
+    def __init__(self, env, model, nsteps, gamma, lam, finite):
         super().__init__(env=env, model=model, nsteps=nsteps, finite=finite)
         # Lambda used in GAE (General Advantage Estimation)
         self.lam = lam
         # Discount rate
         self.gamma = gamma
-        # World
-        self.world = world
 
     def run(self):
         # Here, we init the lists that will contain the mb of experiences
-        mb_obs, mb_actions, mb_rewards, mb_values, mb_dones, mb_neglogpacs = [self.obs],[],[],[],[],[]
+        mb_obs, mb_actions, mb_rewards, mb_values, mb_dones, mb_neglogpacs = [deepcopy(self.obs)],[],[],[],[],[]
         # For n in range number of steps
         for _ in range(self.nsteps):
             # Given observations, get action value and neglopacs
@@ -69,12 +67,12 @@ class Runner(AbstractEnvRunner):
         lastgaelam = 0
         for t in reversed(range(self.nsteps)):
             if t == self.nsteps - 1:
-                nextnonterminal = 1.0 - self.dones
+                nextnonterminal = 1.0 - self.dones * self.finite
                 nextvalues = last_values
             else:
-                nextnonterminal = 1.0 - mb_dones[t+1]
+                nextnonterminal = 1.0 - mb_dones[t+1] * self.finite
                 nextvalues = mb_values[t+1]
-            nextnonterminal = np.tile(nextnonterminal[:,None], (1,len(self.world.policy_agents)))
+            nextnonterminal = np.tile(nextnonterminal[:,None], (1,len(self.env.action_space)))
             delta = mb_rewards[t] + self.gamma * nextvalues * nextnonterminal - mb_values[t]
             mb_advs[t] = lastgaelam = delta + self.gamma * self.lam * nextnonterminal * lastgaelam
         mb_returns = mb_advs + mb_values
