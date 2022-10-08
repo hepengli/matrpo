@@ -17,12 +17,13 @@ if __name__ == '__main__':
         np.array([[-1]+[0]*(num_agents-2)+[1]]),
     ]).astype(np.float32)
 
+    exp_name = 'maxkl_0002'
     seed = 1
     num_env = 10
-    mode = 'trpo'
+    mode = 'matrpo'
     env_id = 'MultiAgent-v0'
     scenario_id = 'collector'
-    logger_dir = '/home/lihepeng/Documents/Github/matrpo/results/rewards/collector'
+    logger_dir = '/home/lihepeng/Documents/Github/matrpo/results/rewards/collector/exp_{}/s{}'.format(exp_name, seed)
     info_keywords = tuple('r{}'.format(i) for i in range(8))
     env = make_vec_env(env_id, scenario_id, seed, num_env, logger_dir, reward_scale=1.0, info_keywords=info_keywords)
     test_env = make_env(env_id, scenario_id, seed, logger_dir, reward_scale=1.0, info_keywords=info_keywords)
@@ -33,10 +34,12 @@ if __name__ == '__main__':
         nsteps=1000,
         network='mlp',
         seed=seed,
+        max_kl=0.002,
         finite=True,
-        admm_iter=500,
+        admm_iter=200,
+        rho=5,
         num_env=num_env, 
-        load_path='/home/lihepeng/Documents/Github/matrpo/results/graphs/collector',
+        load_path='/home/lihepeng/Documents/Github/matrpo/results/graphs/collector/exp_{}/s{}'.format(exp_name, seed),
         mode=mode,
         test_env=test_env,
         **network_kwargs)
@@ -45,7 +48,7 @@ if __name__ == '__main__':
     for step in range(1, total_timesteps+1):
         actions, obs, rewards, returns, dones, values, advs, neglogpacs = agents.runner.run()
         agents.model.train(actions, obs, rewards, returns, dones, values, advs, neglogpacs)
-        df_train = load_results('/home/lihepeng/Documents/Github/matrpo/results/rewards/collector')
+        df_train = load_results('/home/lihepeng/Documents/Github/matrpo/results/rewards/collector/exp_{}/s{}'.format(exp_name, seed))
         if step % 10 == 1:
             plot(df_train, agents, 100)
             agents.model.save()

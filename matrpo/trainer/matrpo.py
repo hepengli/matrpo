@@ -1,7 +1,7 @@
 import numpy as np
 import os, gym
 
-from baselines.common import set_global_seeds
+from matrpo.common.misc_util import set_global_seeds
 from matrpo.trainer.model import Model
 from matrpo.trainer.runner import Runner
 from matrpo.trainer.build_policy import Policy
@@ -27,7 +27,7 @@ class MATRPO(object):
                 vf_stepsize, vf_iters, cg_damping, cg_iters, lbfgs_iters, load_path, **network_kwargs)
 
         # model
-        self.model = model = Model(env, policies, admm_iter, mode, ob_normalization)
+        self.model = model = Model(env, policies, admm_iter, mode, adj_matrix, ob_normalization)
 
         # runner
         self.runner = Runner(env, model, nsteps, gamma, lam, finite)

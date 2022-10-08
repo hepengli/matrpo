@@ -1,7 +1,6 @@
 import numpy as np
 from abc import ABC, abstractmethod
 from copy import deepcopy
-import tensorflow as tf
 
 class AbstractEnvRunner(ABC):
     def __init__(self, *, env, model, nsteps, finite):

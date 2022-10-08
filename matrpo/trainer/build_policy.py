@@ -1,5 +1,4 @@
 import numpy as np
-import tensorflow as tf
 from matrpo.trainer.agent_model import AgentModel
 from gym import spaces
 

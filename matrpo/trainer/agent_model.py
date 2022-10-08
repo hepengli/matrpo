@@ -1,12 +1,16 @@
-from baselines.common import explained_variance, zipsame, dataset
-from baselines import logger
-import baselines.common.tf_util as U
-import tensorflow as tf, numpy as np
+import numpy as np
+import tensorflow as tf
 import time, os
-from baselines.common.models import get_network_builder
-from baselines.common.mpi_adam import MpiAdam
-from baselines.common import colorize
-from baselines.common.cg import cg
+
+from matrpo import logger
+import matrpo.common.tf_util as U
+from matrpo.common import dataset
+from matrpo.common.math_util import zipsame
+from matrpo.common.misc_util import explained_variance
+from matrpo.common.models import get_network_builder
+from matrpo.common.mpi_adam import MpiAdam
+from matrpo.common.console_util import colorize
+from matrpo.common.cg import cg
 from matrpo.common.policies import PolicyWithValue
 from matrpo.common.lbfgs import lbfgs
 

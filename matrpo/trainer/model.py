@@ -1,14 +1,13 @@
 import tensorflow as tf
 import numpy as np
-import time, copy
-from baselines.common.vec_env.vec_env import VecEnv
 
 class Model(object):
-    def __init__(self, env, policies, admm_iter, mode, ob_normalization):
+    def __init__(self, env, policies, admm_iter, mode, adj_matrix, ob_normalization):
         self.env = env
         self.policies = policies
         self.admm_iter = admm_iter 
         self.mode = mode
+        self.adj_matrix = adj_matrix
         self.leader = 0 if mode == 'central' else None
         self.test = False
         self.ob_normalization = ob_normalization
@@ -90,8 +89,7 @@ class Model(object):
 
     def train(self, actions, obs, rewards, returns, dones, values, advs, neglogpacs):
         eps = 1e-8
-        A = self.policies[0].agent.comm_matrix
-        edges = A[np.unique(np.nonzero(A)[0])]
+        edges = self.adj_matrix[np.unique(np.nonzero(self.adj_matrix)[0])]
         # Policy Update
         if self.mode == 'matrpo':
             for i in range(len(self.env.action_space)):
@@ -106,7 +104,7 @@ class Model(object):
             argvs = tuple(zip(obs, actions, norm_advs, returns, values))
             # consensus using admm
             for itr in range(self.admm_iter):
-                # edge = edges[np.random.choice(range(len(adv_edges)))]
+                # edge = edges[np.random.choice(range(len(edges)))]
                 edge = edges[itr % len(edges)]
                 q = np.where(edge != 0)[0]
                 k, j = q[0], q[-1]

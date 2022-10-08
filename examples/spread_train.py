@@ -16,7 +16,7 @@ if __name__ == '__main__':
         comm_matrix,
         np.array([[-1]+[0]*(num_agents-2)+[1]]),
     ]).astype(np.float32)
-    seed = 2
+    seed = 1
     num_env = 10
     mode = 'matrpo'
     env_id = 'MultiAgent-v0'

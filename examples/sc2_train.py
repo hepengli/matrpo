@@ -114,8 +114,8 @@ def make_vec_env(map_name, seed, num_env, logger_dir, reward_scale=1.0, force_du
 def main():
     num_agents = 10
     comm_matrix = toeplitz(
-        [1]+[0]*(num_agents-2), 
-        [1,-1]+[0]*(num_agents-2)
+        [1]+[0]*(num_agents-1), 
+        [1,-1]+[0]*(num_agents-1)
     ).astype(np.float32)
     adj_matrix = np.vstack([
         comm_matrix,
