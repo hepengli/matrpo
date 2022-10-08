@@ -2,11 +2,11 @@ import numpy as np
 import tensorflow as tf
 import time, os
 
-from matrpo import logger
+from matrpo.common import logger
 import matrpo.common.tf_util as U
 from matrpo.common import dataset
-from matrpo.common.math_util import zipsame
-from matrpo.common.misc_util import explained_variance
+from matrpo.common.math_util import explained_variance
+from matrpo.common.misc_util import zipsame
 from matrpo.common.models import get_network_builder
 from matrpo.common.mpi_adam import MpiAdam
 from matrpo.common.console_util import colorize
