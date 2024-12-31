@@ -124,7 +124,7 @@ def main():
 
     seed = 1
     num_env = 10
-    mode = 'trpo'
+    mode = 'matrpo'
     map_name = '3s5z_vs_3s6z'
     logger_dir = '/home/lihepeng/Documents/Github/matrpo/results/rewards/{}'.format(map_name)
     test_dir = '/home/lihepeng/Documents/Github/matrpo/results/test/{}'.format(map_name)
